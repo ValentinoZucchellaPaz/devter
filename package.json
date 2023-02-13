@@ -5,8 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "next start"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.17",
@@ -14,8 +13,6 @@
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@next/font": "13.1.6",
-    "eslint": "8.33.0",
-    "eslint-config-next": "13.1.6",
     "firebase": "^9.17.1",
     "framer-motion": "^9.0.1",
     "next": "13.1.6",

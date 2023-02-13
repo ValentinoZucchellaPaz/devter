@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Script from "next/script";
-import { Inter } from "@next/font/google";
+// import { Inter } from '@next/font/google'
 // import styles from "@/styles/Home.module.css";
 import Header from "@/components/HeaderLayout";
 import MobileWrapper from "@/components/MobileWrapper";
@@ -10,7 +10,7 @@ import UserAvatar from "@/components/UserAvatar/UserAvatar";
 import { useEffect, useState } from "react";
 import { ChakraProvider } from "@chakra-ui/react";
 
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   const [user, setUser] = useState(null);
@@ -35,9 +35,9 @@ export default function Home() {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <MobileWrapper>
-          <Header
-            links={[{ name: "timeline", url: "/timeline" }]}
-          >{`< talk about development with developers />`}</Header>
+          <Header links={[{ name: "timeline", url: "/timeline" }]}>
+            {"< talk about development with developers />"}
+          </Header>
           {user === null && (
             <Button handleClick={handleSingIn}>
               <i className="fa-brands fa-github"></i> Loguearse con Github

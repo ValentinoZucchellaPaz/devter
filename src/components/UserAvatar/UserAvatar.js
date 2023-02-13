@@ -1,4 +1,4 @@
-import { Text, Stack, SkeletonCircle } from "@chakra-ui/react";
+import { Text, Stack } from "@chakra-ui/react";
 import styles from "./UserAvatar.module.css";
 
 export default function UserAvatar({ user }) {
@@ -37,6 +37,7 @@ export default function UserAvatar({ user }) {
             }}
             className="rounded-full w-12 h-12 cursor-pointer"
             src={user.photoURL}
+            alt={user.displayName}
             title="ver detalle"
           />
           <Text
