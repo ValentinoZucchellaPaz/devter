@@ -1,23 +1,31 @@
+import { useRouter } from "next/router";
 import Head from "next/head";
 import Script from "next/script";
-// import { Inter } from '@next/font/google'
-// import styles from "@/styles/Home.module.css";
-import Header from "@/components/HeaderLayout";
 import MobileWrapper from "@/components/MobileWrapper";
+import Header from "@/components/HeaderLayout";
 import Button from "@/components/Button/Button";
 import { loginWithGithub, onAuthStateChangeOfUser } from "@/firebase/client";
-import UserAvatar from "@/components/UserAvatar/UserAvatar";
 import { useEffect, useState } from "react";
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, Spinner, Center } from "@chakra-ui/react";
 
 // const inter = Inter({ subsets: ["latin"] });
 
+const USER_STATES = {
+  NOT_LOGGED: null,
+  NOT_KNOWN: undefined,
+};
+
 export default function Home() {
-  const [user, setUser] = useState(null);
+  const router = useRouter();
+  const [user, setUser] = useState(USER_STATES.NOT_KNOWN);
 
   useEffect(() => {
     onAuthStateChangeOfUser(setUser);
   }, []);
+
+  useEffect(() => {
+    user && router.replace("/home");
+  }, [user]);
 
   const handleSingIn = () => {
     loginWithGithub()
@@ -35,15 +43,21 @@ export default function Home() {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <MobileWrapper>
-          <Header links={[{ name: "timeline", url: "/timeline" }]}>
-            {"< talk about development with developers />"}
-          </Header>
-          {user === null && (
-            <Button handleClick={handleSingIn}>
-              <i className="fa-brands fa-github"></i> Loguearse con Github
-            </Button>
-          )}
-          <UserAvatar user={user} />
+          <div className="flex flex-col justify-center items-center">
+            <Header links={[{ name: "timeline", url: "/timeline" }]}>
+              {"< talk about development with developers />"}
+            </Header>
+            {user === USER_STATES.NOT_LOGGED && (
+              <Button handleClick={handleSingIn}>
+                <i className="fa-brands fa-github"></i> Loguearse con Github
+              </Button>
+            )}
+            {user === USER_STATES.NOT_KNOWN && (
+              <div className="mt-7">
+                <Spinner size="xl" color="blue.600" />
+              </div>
+            )}
+          </div>
         </MobileWrapper>
         <Script
           src="https://kit.fontawesome.com/71feeb67fe.js"

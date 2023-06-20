@@ -12,14 +12,14 @@ export default function Home() {
   }, []);
   return (
     <MobileWrapper>
-      <header className="w-full flex justify-start items-center h-12 border-b-[1px] border-solid border-gray-800 ">
+      <header className="w-full flex justify-start items-center h-12 border-b-[1px] border-solid border-gray-800 sticky top-0 bg-white bg-opacity-20">
         <strong className="ml-2">Inicio</strong>
       </header>
 
       <section className="h-[calc(100%-3rem)] overflow-auto">
         {timeline.map((tweet) => (
           <Devit
-            key={tweet}
+            key={tweet.id}
             img={tweet.photoURL}
             name={tweet.name}
             username={tweet.username}
@@ -28,7 +28,7 @@ export default function Home() {
         ))}
       </section>
 
-      <nav className="w-full h-12 flex justify-start items-center absolute bottom-0 border-t-[1px] border-solid border-gray-800 rounded-b-full "></nav>
+      <nav className="w-full h-12 flex justify-start items-center absolute bottom-0 border-t-[1px] border-solid border-gray-800 sm:rounded-b-lg bg-white"></nav>
     </MobileWrapper>
   );
 }

@@ -1,8 +1,9 @@
 import { Text, Stack } from "@chakra-ui/react";
-import styles from "./UserAvatar.module.css";
+import styles from "./Avatar.module.css";
 
-export default function UserAvatar({ user }) {
+export default function UserAvatar({ user, withText }) {
   console.log(user);
+  const { displayName, photoURL } = user;
 
   return (
     <Stack
@@ -36,28 +37,21 @@ export default function UserAvatar({ user }) {
               );
             }}
             className="rounded-full w-12 h-12 cursor-pointer"
-            src={user.photoURL}
-            alt={user.displayName}
+            src={photoURL}
+            alt={displayName}
             title="ver detalle"
           />
-          <Text
-            className="user-info"
-            fontSize="12px"
-            fontWeight="700"
-            display="none"
-            textAlign="center"
-          >
-            {user.displayName}
-          </Text>
-          <Text
-            className="user-info"
-            fontSize="12px"
-            fontWeight="700"
-            display="none"
-            textAlign="center"
-          >
-            {user.email}
-          </Text>
+          {withText && (
+            <Text
+              className="user-info"
+              fontSize="12px"
+              fontWeight="700"
+              display="none"
+              textAlign="center"
+            >
+              {displayName}
+            </Text>
+          )}
         </>
       )}
     </Stack>
