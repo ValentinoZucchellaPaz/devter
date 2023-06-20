@@ -1,4 +1,4 @@
-export default function Button({ children, handleClick }) {
+export default function Button ({ children, handleClick }) {
   return (
     <button
       onClick={handleClick}
@@ -6,5 +6,5 @@ export default function Button({ children, handleClick }) {
     >
       {children}
     </button>
-  );
+  )
 }

@@ -1,8 +1,8 @@
-import Link from "next/link";
-import Image from "next/image";
-import logoBig from "./assets/devter-high-resolution-logo-color-on-transparent-background.png";
+import Link from 'next/link'
+import Image from 'next/image'
+import logoBig from './assets/devter-high-resolution-logo-color-on-transparent-background.png'
 
-export default function Header({ children: title, links = [] }) {
+export default function Header ({ children: title, links = [] }) {
   return (
     <header className="flex flex-col items-center gap-3 w-fit m-auto">
       <Link className="cursor-pointer" href="/">
@@ -24,10 +24,10 @@ export default function Header({ children: title, links = [] }) {
               >
                 {link.name}
               </Link>
-            );
+            )
           })}
         </nav>
       )}
     </header>
-  );
+  )
 }
