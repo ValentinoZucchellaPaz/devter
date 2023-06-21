@@ -7,6 +7,8 @@ import {
   createUserWithEmailAndPassword,
   onAuthStateChanged
 } from 'firebase/auth'
+import { Timestamp, addDoc, collection, getFirestore, query, orderBy, getDocs } from 'firebase/firestore'
+import { getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -24,25 +26,31 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig)
 const auth = getAuth(app)
+const db = getFirestore(app)
+const storage = getStorage(app)
 
-function mapUserFromFireBaseAuth (result) {
-  const { displayName, photoURL, email } = result.user
+function mapUserFromFireBaseAuth (user) {
+  console.log(user)
+  const { displayName, photoURL, email, uid } = user
   return {
-    photoURL,
-    displayName,
-    email
+    avatar: photoURL,
+    username: displayName,
+    email,
+    uid
   }
 }
 
 export function onAuthStateChangeOfUser (onChange) {
-  onAuthStateChanged(auth, onChange)
+  onAuthStateChanged(auth, (user) => {
+    const normalizedUser = user ? mapUserFromFireBaseAuth(user) : null
+    onChange(normalizedUser)
+  })
 }
 
 export function loginWithGithub () {
   const provider = new GithubAuthProvider()
-
   return signInWithPopup(auth, provider)
-    .then((result) => mapUserFromFireBaseAuth(result))
+    .then((result) => mapUserFromFireBaseAuth(result.user))
     .catch((err) => {
       const errorCode = err.errorCode
       const errorMessage = err.message
@@ -63,4 +71,46 @@ export function LoginWithEmail ({ email, password }) {
       const errorMessage = err.message
       return { errorCode, errorMessage }
     })
+}
+
+export function addDevit ({ avatar, content, imgURL, userId, username }) {
+  const docRef = addDoc(collection(db, 'devits'),
+    {
+      avatar,
+      content,
+      userId,
+      imgURL,
+      username,
+      createdAt: Timestamp.fromDate(new Date()),
+      likesCount: 0,
+      sharedCount: 0
+    })
+  return docRef
+}
+
+export function fetchLatestDevits () {
+  const collectionRef = collection(db, 'devits')
+  const orderedByDate = query(collectionRef, orderBy('createdAt', 'desc'))
+  const docsRef = getDocs(orderedByDate)
+    .then(snapshot => {
+      return snapshot.docs.map(devit => {
+        const data = devit.data()
+        const id = devit.id
+        const { createdAt } = data
+        return {
+          ...data,
+          id,
+          createdAt: +createdAt.toDate()
+        }
+      })
+    })
+    .catch(err => { throw new Error(err) })
+
+  return docsRef
+}
+
+export function uploadImage (file) {
+  const imagesRef = ref(storage, `images/${file.name}`)
+  console.log(imagesRef)
+  return uploadBytesResumable(imagesRef, file)
 }

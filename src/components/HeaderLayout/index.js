@@ -1,12 +1,11 @@
 import Link from 'next/link'
-import Image from 'next/image'
-import logoBig from './assets/devter-high-resolution-logo-color-on-transparent-background.png'
+import Logo from '../Icons/Logo'
 
 export default function Header ({ children: title, links = [] }) {
   return (
     <header className="flex flex-col items-center gap-3 w-fit m-auto">
       <Link className="cursor-pointer" href="/">
-        <Image className=" w-56" src={logoBig} alt="logo" />
+        <Logo width={100} />
       </Link>
       <h2 className="text-xl text-center text-[#1c5488] mx-10">
         {/* {title && `${title}`} */}
