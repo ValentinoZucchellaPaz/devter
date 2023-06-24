@@ -26,11 +26,10 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig)
 const auth = getAuth(app)
-const db = getFirestore(app)
+export const db = getFirestore(app)
 const storage = getStorage(app)
 
 function mapUserFromFireBaseAuth (user) {
-  console.log(user)
   const { displayName, photoURL, email, uid } = user
   return {
     avatar: photoURL,

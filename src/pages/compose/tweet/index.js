@@ -1,5 +1,4 @@
 import Button from '@/components/Button/Button'
-import MobileWrapper from '@/components/MobileWrapper'
 import useUser from '@/hooks/useUser'
 import { useState, useEffect, useRef } from 'react'
 import { addDevit, uploadImage } from '@/firebase/client'
@@ -99,11 +98,12 @@ function ComposeTweet () {
   const isButtonDisabled = !message.length || status === COMPOSE_STATUS.LOADING
 
   return (
-    <MobileWrapper>
+    <>
 
       <Head>
         <title>Crear un Devit</title>
       </Head>
+      <header className="w-full flex flex-row justify-start items-center h-14 border-b-[1px] border-solid border-gray-300 sticky top-0 bg-white bg-opacity-20"></header>
       <form onSubmit={handleSubmit} className='w-full h-full p-2 flex flex-col items-center'>
         <div className='flex flex-row items-start my-2 w-full gap-2'>
           <UserAvatar src={user?.avatar} alt={user?.username} />
@@ -127,7 +127,7 @@ function ComposeTweet () {
                 </div>
             }
         </div>
-        <div className='w-full h-14 flex flex-row justify-between items-center px-4 absolute top-0'>
+        <div className='w-full h-12 flex flex-row justify-between items-center px-4 mt-[2px] absolute top-0'>
           <Button classes='bg-transparent px-1 hover:bg-gray-200' handleClick={handleCancel} disabled={message.length && isButtonDisabled}>
             <ArrowLeft width={32} height={32} stroke='#1DA1F2'/>
           </Button>
@@ -136,7 +136,7 @@ function ComposeTweet () {
           </Button>
       </div>
       </form>
-    </MobileWrapper>
+    </>
   )
 }
 

@@ -1,4 +1,3 @@
-import MobileWrapper from '@/components/MobileWrapper'
 import { useEffect, useState } from 'react'
 import Devit from '@/components/Devit'
 import useUser from '@/hooks/useUser'
@@ -15,18 +14,18 @@ export default function Home () {
 
   useEffect(() => {
     if (user) {
-      fetchLatestDevits().then(timeline => {
-        console.log(timeline)
-        setTimeline(timeline)
-      }).catch(e => console.error(e))
+      fetchLatestDevits().then(setTimeline).catch(e => console.error(e))
     }
   }, [user])
 
   return (
-    <MobileWrapper headerText='Inicio'>
+    <>
       <Head>
         <title>Inicio | Devter</title>
       </Head>
+      <header className="w-full flex flex-row justify-start items-center h-14 border-b-[1px] border-solid border-gray-300 sticky top-0 bg-white bg-opacity-20">
+          <strong className="ml-2">Inicio</strong>
+      </header>
 
       <section className="h-[calc(100%-3rem)] overflow-auto">
         {
@@ -37,7 +36,6 @@ export default function Home () {
               id={id}
               avatar={avatar}
               imgURL={imgURL}
-              name={username}
               username={username}
               content={content}
               userId={userId}
@@ -79,6 +77,6 @@ export default function Home () {
         stroke: #0049ff;
       }
       `}</style>
-    </MobileWrapper>
+    </>
   )
 }
