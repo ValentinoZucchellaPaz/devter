@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import Devit from '@/components/Devit'
 import useUser from '@/hooks/useUser'
-import { fetchLatestDevits } from '@/firebase/client'
+import { listenLatestDevits } from '@/firebase/client'
 import Create from '@/components/Icons/Create'
 import Link from 'next/link'
 import HomeSVG from '@/components/Icons/Home'
@@ -13,9 +13,13 @@ export default function Home () {
   const { user } = useUser()
 
   useEffect(() => {
+    let unsubscribe
     if (user) {
-      fetchLatestDevits().then(setTimeline).catch(e => console.error(e))
+      unsubscribe = listenLatestDevits(setTimeline)
     }
+
+    // se limpia la subscripcion (listen) cuando se desmonta componente
+    return () => unsubscribe && unsubscribe()
   }, [user])
 
   return (
@@ -29,7 +33,7 @@ export default function Home () {
 
       <section className="h-[calc(100%-3rem)] overflow-auto">
         {
-          timeline.map((devit) => {
+          timeline && timeline.map((devit) => {
             const { username, avatar, content, id, userId, createdAt, imgURL } = devit
             return <Devit
               key={id}

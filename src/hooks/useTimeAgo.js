@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { formatTime } from './useDateTimeFormat'
 
 const DATE_UNITS = [
   ['day', 86400],
@@ -6,6 +7,8 @@ const DATE_UNITS = [
   ['minute', 60],
   ['second', 1]
 ]
+
+const isRelativeTimeFormatSupported = typeof Intl !== 'undefined' && Intl.RelativeTimeFormat
 
 const getDateDiff = timestamp => {
   const now = Date.now()
@@ -31,17 +34,22 @@ export default function useTimeAgo (timestamp) {
   const { value, unit } = timeago
 
   useEffect(() => {
-    if (unit !== 'day') {
-      const currentUnit = DATE_UNITS.find(([unitString, _]) => unitString === unit)
-      const multiplier = currentUnit[1] === 1 ? 15 : currentUnit[1]
-      const interval = setInterval(() => {
-        const newTimeago = getDateDiff(timestamp)
-        setTimeago(newTimeago)
-      }, (1000 * multiplier))
-      return () => clearInterval(interval)
+    if (isRelativeTimeFormatSupported) {
+      if (unit !== 'day') {
+        const currentUnit = DATE_UNITS.find(([unitString, _]) => unitString === unit)
+        const multiplier = currentUnit[1] === 1 ? 15 : currentUnit[1]
+        const interval = setInterval(() => {
+          const newTimeago = getDateDiff(timestamp)
+          setTimeago(newTimeago)
+        }, (1000 * multiplier))
+        return () => clearInterval(interval)
+      }
     }
   }, [timeago])
 
+  if (!isRelativeTimeFormatSupported) {
+    return formatTime(timestamp)
+  }
   if (value > 7 && unit === 'day') {
     const date = new Date(timestamp)
     const day = date.getDate()

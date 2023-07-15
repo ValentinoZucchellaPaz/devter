@@ -26,7 +26,7 @@ export default function Devit ({ avatar, username, content, imgURL, userId, crea
           </Link>
         </div>
         <p className=" text-sm">{content}</p>
-        {imgURL && <img className='w-full max-h-[300px] mt-3 object-contain rounded-lg' src={imgURL} alt='uploaded-image'/>}
+        {imgURL && <img className='w-full max-h-[300px] mt-3 object-cover rounded-lg' src={imgURL} alt='uploaded-image'/>}
 
       </div>
     </article>

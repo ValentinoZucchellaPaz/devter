@@ -7,7 +7,7 @@ import {
   createUserWithEmailAndPassword,
   onAuthStateChanged
 } from 'firebase/auth'
-import { Timestamp, addDoc, collection, getFirestore, query, orderBy, getDocs } from 'firebase/firestore'
+import { Timestamp, addDoc, collection, getFirestore, query, orderBy, onSnapshot, limit } from 'firebase/firestore'
 import { getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -87,26 +87,38 @@ export function addDevit ({ avatar, content, imgURL, userId, username }) {
   return docRef
 }
 
-export function fetchLatestDevits () {
-  const collectionRef = collection(db, 'devits')
-  const orderedByDate = query(collectionRef, orderBy('createdAt', 'desc'))
-  const docsRef = getDocs(orderedByDate)
-    .then(snapshot => {
-      return snapshot.docs.map(devit => {
-        const data = devit.data()
-        const id = devit.id
-        const { createdAt } = data
-        return {
-          ...data,
-          id,
-          createdAt: +createdAt.toDate()
-        }
-      })
-    })
-    .catch(err => { throw new Error(err) })
-
-  return docsRef
+function mapDevitFromFirebase (devit) {
+  const data = devit.data()
+  const id = devit.id
+  const { createdAt } = data
+  return {
+    ...data,
+    id,
+    createdAt: +createdAt.toDate()
+  }
 }
+
+export function listenLatestDevits (callback) {
+  const collectionRef = collection(db, 'devits')
+  const orderedByDate = query(collectionRef, orderBy('createdAt', 'desc'), limit(20))
+  // onSnapshot devuelve un metodo para cancelar la 'subscripcion'
+  return onSnapshot(orderedByDate, ({ docs }) => {
+    const newDevits = docs.map(mapDevitFromFirebase)
+    callback(newDevits)
+  })
+}
+
+// export function fetchLatestDevits () {
+//   const collectionRef = collection(db, 'devits')
+//   const orderedByDate = query(collectionRef, orderBy('createdAt', 'desc'))
+//   const docsRef = getDocs(orderedByDate)
+//     .then(snapshot => {
+//       return snapshot.docs.map(mapDevitFromFirebase)
+//     })
+//     .catch(err => { throw new Error(err) })
+
+//   return docsRef
+// }
 
 export function uploadImage (file) {
   const imagesRef = ref(storage, `images/${file.name}`)
